@@ -1,0 +1,48 @@
+version: '3'
+
+services:
+  leos-repository:
+    image: netbeat/leos-repository
+    restart: always
+    networks:
+       - leos-nw
+    expose:
+      - "9090"
+    container_name: leos-repository
+
+  leos-user-repository:
+    image: netbeat/leos-user-repository
+    restart: always
+    networks:
+       - leos-nw
+    expose:
+      - "9095"
+    container_name: leos-user-repository
+
+  leos-annotate:
+    image: netbeat/leos-annotate
+    restart: always
+    networks:
+       - leos-nw
+    expose:
+      - "9099"
+    container_name: leos-annotate
+
+  leos-ui:
+    image: netbeat/leos
+    depends_on:
+       - leos-repository
+       - leos-user-repository
+       - leos-annotate
+    restart: always
+    networks:
+       - leos-nw
+    expose:
+      - "8080"
+    container_name: leos-ui
+    environment:
+      - CMIS_SERVER=leos-repository:9090
+      - ANNOTATE_SERVER=leos-annotate:9099
+      - USER_REPOSITORY=leos-user-repository:9095
+networks:
+  leos-nw:
