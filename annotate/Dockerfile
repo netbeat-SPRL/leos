@@ -2,6 +2,9 @@ FROM ubuntu:latest
 
 LABEL maintainer="Arnaud Wallon (arnaud@netbeat.be)"
 
+ENV ANNOTATE_SERVER localhost:9099
+ENV USER_REPOSITORY localhost:9095
+
 ENV SHA256 7c6102035febf6905b96587c7e0d84103b8271e357b5be45c849010f5221fef1
 
 RUN apt-get update && \
@@ -18,11 +21,6 @@ RUN mkdir /opt/leos && \
     wget https://joinup.ec.europa.eu/sites/default/files/distribution/access_url/2018-08/3cb1e8a1-2dab-4455-a0f6-69f990e9af42/LEOS-Pilot_2.0.0.zip && \
     echo "$SHA256 LEOS-Pilot_2.0.0.zip" | sha256sum -c - && \
     unzip LEOS-Pilot_2.0.0.zip
-
-RUN export PATH=/opt/maven/apache-maven-3.3.9/bin:$PATH && \
-    echo $PATH && \
-    cd /opt/leos/modules/annotate && \
-    mvn clean install -Dmaven.test.skip=true
 
 COPY start-leos.sh ./
 

@@ -6,8 +6,8 @@ services:
     restart: always
     networks:
        - leos-nw
-    expose:
-      - "9090"
+    ports:
+      - "9090:9090"
     container_name: leos-repository
 
   leos-user-repository:
@@ -15,8 +15,8 @@ services:
     restart: always
     networks:
        - leos-nw
-    expose:
-      - "9095"
+    ports:
+      - "9095:9095"
     container_name: leos-user-repository
 
   leos-annotate:
@@ -24,9 +24,12 @@ services:
     restart: always
     networks:
        - leos-nw
-    expose:
-      - "9099"
+    ports:
+      - "9099:9099"
     container_name: leos-annotate
+    environment:
+      - ANNOTATE_SERVER=leos-annotate:9099
+      - USER_REPOSITORY=leos-user-repository:9095
 
   leos-ui:
     image: netbeat/leos
@@ -37,8 +40,8 @@ services:
     restart: always
     networks:
        - leos-nw
-    expose:
-      - "8080"
+    ports:
+      - "8080:8080"
     container_name: leos-ui
     environment:
       - CMIS_SERVER=leos-repository:9090
